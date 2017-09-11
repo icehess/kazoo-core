@@ -1,39 +1,24 @@
 %%%-------------------------------------------------------------------
-%%% @copyright (C) 2012-2017, 2600Hz, INC
+%%% @copyright (C) 2012-2017, 2600Hz INC
 %%% @doc
 %%%
 %%% @end
 %%% @contributors
 %%%-------------------------------------------------------------------
--module(kazoo_data_sup).
+-module(kazoo_maintenance_sup).
 
 -behaviour(supervisor).
-
--include("kz_data.hrl").
-
--define(SERVER, ?MODULE).
 
 -export([start_link/0
         ,init/1
         ]).
 
--define(ORIGIN_BINDINGS, [[]
-                         ]).
+-include_lib("kazoo_stdlib/include/kz_types.hrl").
 
--define(CACHE_PROPS, [{'origin_bindings', ?ORIGIN_BINDINGS}
-                     ]).
+-define(SERVER, ?MODULE).
 
--define(DP_ORIGIN_BINDINGS, [[{'db', ?KZ_DATA_DB}]]).
--define(DP_CACHE_PROPS, [{'origin_bindings', ?DP_ORIGIN_BINDINGS}]).
-
--define(CHILDREN, [?WORKER('kazoo_data_init')
-                  ,?CACHE_ARGS(?CACHE_NAME, ?CACHE_PROPS)
-                  ,?CACHE_ARGS(?KAZOO_DATA_PLAN_CACHE, ?DP_CACHE_PROPS)
-                  ,?SUPER('kz_dataconnection_sup')
-                  ,?WORKER('kz_dataconnections')
-                  ,?WORKER('kazoo_data_bootstrap')
-                  ,?WORKER('kz_data_tracing')
-                  ,?WORKER('kz_data_maint_listener')
+-define(CHILDREN, [?WORKER('kapps_config_maint_listener')
+                  ,?WORKER('kazoo_oauth_maint_listener')
                   ]).
 
 %% ===================================================================
@@ -64,9 +49,8 @@ start_link() ->
 -spec init(any()) -> sup_init_ret().
 init([]) ->
     RestartStrategy = 'one_for_one',
-    MaxRestarts = 5,
-    MaxSecondsBetweenRestarts = 10,
+    MaxRestarts = 25,
+    MaxSecondsBetweenRestarts = 1,
 
     SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
-
     {'ok', {SupFlags, ?CHILDREN}}.
