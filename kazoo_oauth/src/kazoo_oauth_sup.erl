@@ -3,20 +3,18 @@
 %%% @doc
 %%% @end
 %%%-----------------------------------------------------------------------------
--module(kazoo_maintenance_sup).
-
+-module(kazoo_oauth_sup).
 -behaviour(supervisor).
 
--export([start_link/0
-        ,init/1
-        ]).
-
--include_lib("kazoo_stdlib/include/kz_types.hrl").
+-include("kazoo_oauth.hrl").
 
 -define(SERVER, ?MODULE).
 
--define(CHILDREN, [?WORKER('kapps_config_maint_listener')
-                  ,?WORKER('kazoo_oauth_maint_listener')
+-export([start_link/0]).
+-export([init/1]).
+
+%% Helper macro for declaring children of supervisor
+-define(CHILDREN, [?WORKER('kazoo_oauth_maintenance')
                   ]).
 
 %%==============================================================================
@@ -45,8 +43,9 @@ start_link() ->
 -spec init(any()) -> kz_types:sup_init_ret().
 init([]) ->
     RestartStrategy = 'one_for_one',
-    MaxRestarts = 25,
-    MaxSecondsBetweenRestarts = 1,
+    MaxRestarts = 5,
+    MaxSecondsBetweenRestarts = 10,
 
     SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
+
     {'ok', {SupFlags, ?CHILDREN}}.
