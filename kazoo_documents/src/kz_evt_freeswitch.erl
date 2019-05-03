@@ -1,10 +1,10 @@
 %%%-----------------------------------------------------------------------------
-%%% @copyright (C) 2010-2019, 2600Hz
-%%% @doc FreeSWITCH proplists
-%%% @author James Aimonetti
+%%% @copyright (C) 2017-2019, 2600Hz
+%%% @doc FreeSWITCH json
+%%%
 %%% @end
 %%%-----------------------------------------------------------------------------
--module(kzd_freeswitch).
+-module(kz_evt_freeswitch).
 
 -export([account_id/1, account_billing/1, account_trunk_usage/1
         ,application_name/1, raw_application_name/1
@@ -21,7 +21,6 @@
         ,cavs/1
         ,channel_authorized/1
         ,conference_name/1, conference_profile_name/1, conference_uuid/1
-        ,context/1, context/2
         ,dialed_number/1
         ,disposition/1
         ,event_name/1
@@ -30,7 +29,6 @@
         ,hangup_code/1, hangup_cause/1
         ,hostname/1, hostname/2
         ,hunt_destination_number/1
-        ,hunt_context/1, hunt_context/2
         ,is_channel_recovering/1, is_channel_recovering/2
         ,is_consuming_global_resource/1, is_consuming_global_resource/2
         ,is_loopback/1, loopback_other_leg/1, loopback_leg_name/1
@@ -52,9 +50,6 @@
         ,fetch_section/1
         ,fetch_winning_pid/1
         ,switch_url/1, switch_uri/1
-        ,from/1, from_user/1, from_realm/1
-        ,to/1, to_user/1, to_realm/1
-        ,request/1, request_user/1, request_realm/1
         ]).
 
 -include("kz_documents.hrl").
@@ -348,56 +343,3 @@ hostname(JObj, Default) ->
 -spec is_call_setup(data()) -> boolean().
 is_call_setup(JObj) ->
     kz_json:is_true(<<"Call-Setup">>, JObj, 'false').
-
--spec context(data()) -> kz_term:api_ne_binary().
-context(JObj) ->
-    context(JObj, 'undefined').
-
--spec context(data(), Default) -> kz_term:ne_binary() | Default.
-context(JObj, Default) ->
-    kz_json:get_ne_binary_value(<<"Caller-Context">>, JObj, Default).
-
--spec hunt_context(data()) -> kz_term:api_ne_binary().
-hunt_context(JObj) ->
-    hunt_context(JObj, 'undefined').
-
--spec hunt_context(data(), Default) -> kz_term:ne_binary() | Default.
-hunt_context(JObj, Default) ->
-    DefContext = context(JObj, Default),
-    kz_json:get_ne_binary_value(<<"Hunt-Context">>, JObj, DefContext).
-
--spec from(data()) -> kz_term:api_binary().
-from(JObj) ->
-    kz_json:get_ne_binary_value(<<"From">>, JObj).
-
--spec from_user(data()) -> kz_term:api_binary().
-from_user(JObj) ->
-    kz_json:get_ne_binary_value(<<"From-User">>, JObj).
-
--spec from_realm(data()) -> kz_term:api_binary().
-from_realm(JObj) ->
-    kz_json:get_ne_binary_value(<<"From-Realm">>, JObj).
-
--spec to(data()) -> kz_term:api_binary().
-to(JObj) ->
-    kz_json:get_ne_binary_value(<<"To">>, JObj).
-
--spec to_user(data()) -> kz_term:api_binary().
-to_user(JObj) ->
-    kz_json:get_ne_binary_value(<<"To-User">>, JObj).
-
--spec to_realm(data()) -> kz_term:api_binary().
-to_realm(JObj) ->
-    kz_json:get_ne_binary_value(<<"To-Realm">>, JObj).
-
--spec request(data()) -> kz_term:api_binary().
-request(JObj) ->
-    kz_json:get_ne_binary_value(<<"Request">>, JObj).
-
--spec request_user(data()) -> kz_term:api_binary().
-request_user(JObj) ->
-    kz_json:get_ne_binary_value(<<"Request-User">>, JObj).
-
--spec request_realm(data()) -> kz_term:api_binary().
-request_realm(JObj) ->
-    kz_json:get_ne_binary_value(<<"Request-Realm">>, JObj).
