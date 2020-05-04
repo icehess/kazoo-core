@@ -560,7 +560,7 @@ refresh([Database|Databases], Pause, Total, Unexpected) ->
                 [io_lib:format("WARNING: Unable to refresh/migrate db ~s! ~s: {~p, ~p}"
                               ,[Database, Error, Reason, StackTrace]
                               )
-                 | Unexpected
+                | Unexpected
                 ]
         end,
     refresh(Databases, Pause, Total, NewUnexpected).
@@ -1793,7 +1793,7 @@ call_id_status(CallId) ->
 -spec call_id_status(kz_term:ne_binary(), boolean() | kz_term:ne_binary()) -> 'ok'.
 call_id_status(CallId, Verbose) ->
     Req = [{<<"Call-ID">>, kz_term:to_binary(CallId)}
-           | kz_api:default_headers(<<"shell">>, <<"0">>)
+          | kz_api:default_headers(<<"shell">>, <<"0">>)
           ],
     case kz_amqp_worker:call(Req
                             ,fun kapi_call:publish_channel_status_req/1
@@ -2161,7 +2161,7 @@ register_system_dbs_views() ->
             ,kapps_util:get_view_json(?APP, <<"views/pending_notify.json">>)
             ,kapps_util:get_view_json(?APP, <<"views/rates.json">>)
             ,kapps_util:get_view_json(?APP, <<"views/token_auth.json">>)
-             | kapps_util:get_views_json('kazoo_ips', "views")
+            | kapps_util:get_views_json('kazoo_ips', "views")
             ],
     kz_datamgr:register_views(?APP, Views).
 
@@ -2208,7 +2208,7 @@ check_release() ->
              ,fun master_account_created/0
              ,fun migration_4_0_ran/0
              ,fun migration_ran/0
-             ,fun kazoo_proper_maintenance:run_seq_modules/0
+             ,fun run_seq_modules/0
              ],
     try lists:foreach(fun(F) -> run_check(F) end, Checks) of
         'ok' ->
@@ -2243,6 +2243,9 @@ wait_for_check(Pid, Ref, StartTime) ->
             exit(Pid, 'kill'),
             throw('timeout')
     end.
+
+run_seq_modules() ->
+    'ok' = rpc:call(node(), 'kazoo_proper_maintenance', 'run_seq_modules', []).
 
 -spec kapps_started() -> boolean().
 kapps_started() ->
