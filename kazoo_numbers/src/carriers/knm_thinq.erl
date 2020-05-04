@@ -71,10 +71,8 @@ acquire_number(Number) ->
 %% @doc Return number back to carrier.
 %% @end
 %%------------------------------------------------------------------------------
--spec disconnect_number(knm_phone_number:record()) ->
-          no_return().
-disconnect_number(Number) ->
-    knm_errors:by_carrier(?MODULE, 'not_implemented', Number).
+-spec disconnect_number(knm_phone_number:record()) -> knm_phone_number:record().
+disconnect_number(Number) -> Number.
 
 %%------------------------------------------------------------------------------
 %% @doc
