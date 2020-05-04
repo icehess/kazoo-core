@@ -2245,7 +2245,7 @@ wait_for_check(Pid, Ref, StartTime) ->
     end.
 
 run_seq_modules() ->
-    'ok' = rpc:call(node(), 'kazoo_proper_maintenance', 'run_seq_modules', []).
+    'no_return' = rpc:call(node(), 'kazoo_proper_maintenance', 'run_seq_modules', []).
 
 -spec kapps_started() -> boolean().
 kapps_started() ->
