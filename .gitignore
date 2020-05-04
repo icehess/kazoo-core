@@ -8,3 +8,9 @@
 /kazoo_numbers/dialcodes.json
 /kazoo_numbers/src/knm_iso3166a2_itu.erl
 /sup/sup
+.deps.rules
+.test.deps
+/kazoo_numbers/src/knm_iso3166_util.erl
+mp3.mp3
+/kazoo_web/mime.types
+/kazoo_web/src/kz_mime.erl
