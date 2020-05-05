@@ -77,6 +77,7 @@
         ,classifier_restriction/2, classifier_restriction/3, set_classifier_restriction/3
         ,full_name/1, full_name/2, full_name/3
         ,validate/3
+        ,get_setters/0
         ]).
 
 -include("kz_documents.hrl").
@@ -1095,6 +1096,17 @@ maybe_validate_username_is_unique(AccountId, UserId, {Doc, Errors}) ->
                     ]),
             {Doc, [{[<<"username">>], <<"unique">>, Msg} | Errors]}
     end.
+
+%%------------------------------------------------------------------------------
+%% @doc Get a mapping of all setter functions (start with set_) with arity 2 for
+%% a users document.
+%% Returns map where the key (Function name without set_) is a binary and the
+%% value (Function name) is an atom.
+%% @end
+%%------------------------------------------------------------------------------
+-spec get_setters() -> #{kz_term:ne_binary() => atom()}.
+get_setters() ->
+    kzd_module_utils:get_setters(?MODULE).
 
 %%------------------------------------------------------------------------------
 %% @doc Return true if a user's username is unique within an account, else
